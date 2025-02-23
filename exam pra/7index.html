@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day to Gujarati</title>
+</head>
+<body>
+    <h2>Enter a day of the week:</h2>
+    <input type="text" id="dayInput" placeholder="Enter day">
+    <button onclick="showGujaratiDay()">Translate</button>
+    <p id="output"></p>
+
+    <script>
+        function getGujaratiDay(day) {
+            switch (day.toLowerCase()) {
+                case "sunday":
+                    return "રવિવાર";
+                case "monday":
+                    return "સોમવાર";
+                case "tuesday":
+                    return "મંગળવાર";
+                case "wednesday":
+                    return "બુધવાર";
+                case "thursday":
+                    return "ગુરૂવાર";
+                case "friday":
+                    return "શુક્રવાર";
+                case "saturday":
+                    return "શનિવાર";
+                default:
+                    return "અમાન્ય દિવસ";
+            }
+        }
+
+        function showGujaratiDay() {
+            let userInput = document.getElementById("dayInput").value;
+            document.getElementById("output").innerText = "Gujarati: " + getGujaratiDay(userInput);
+        }
+    </script>
+</body>
+</html>

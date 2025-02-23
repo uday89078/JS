@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Age Calculator</h2>
+    <label for="birthdate">Enter Your Birthdate:</label>
+    <input type="date" id="birthdate">
+    <button onclick="calculateAge()">Calculate Age</button>
+
+    <div id="result"></div>
+
+    <script>
+        function calculateAge() {
+            let birthdateInput = document.getElementById("birthdate").value;
+            if (!birthdateInput) {
+                document.getElementById("result").innerHTML = "Please enter a valid birthdate!";
+                return;
+            }
+
+            let birthdate = new Date(birthdateInput);
+            let now = new Date();
+
+            let ageInMilliseconds = now - birthdate;
+            let ageInSeconds = Math.floor(ageInMilliseconds / 1000);
+            let ageInMinutes = Math.floor(ageInSeconds / 60);
+            let ageInHours = Math.floor(ageInMinutes / 60);
+            let ageInDays = Math.floor(ageInHours / 24);
+            let ageInMonths = Math.floor(ageInDays / 30.44); // Approximate month length
+            let ageInYears = Math.floor(ageInDays / 365.25); // Considering leap years
+
+            document.getElementById("result").innerHTML = `
+                <p><strong>Your Age:</strong></p>
+                <p>Years: ${ageInYears}</p>
+                <p>Months: ${ageInMonths}</p>
+                <p>Days: ${ageInDays}</p>
+                <p>Hours: ${ageInHours}</p>
+                <p>Minutes: ${ageInMinutes}</p>
+                <p>Seconds: ${ageInSeconds}</p>
+                <p>Milliseconds: ${ageInMilliseconds}</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>

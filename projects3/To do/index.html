@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Dont make any changes here -->
+    <h1>TODO App</h1>
+
+    <div>
+        <!-- ***** We are using form here  ****  -->
+        <form id="form">
+            <label for="">Task Name</label><br />
+            <input id="task" type="text" placeholder="Enter Task Name" /><br />
+            <label for="">Priority </label><br />
+            <select id="priority">
+                <option value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+                ><br />
+                <input type="submit" />
+        </form>
+        <table>
+            <!-- Dont change order of columns -->
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Priority</th>
+                    <th style="background-color: red;">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Append your output to tbody -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        
+
+
+
+
+     
+
+          let count = 1;
+        let form = document.getElementById("form");
+     let array2 = [];
+        form.addEventListener('submit', (event) => {
+            event.preventDefault()
+            let taskname = document.getElementById("task").value;
+            let priority = document.getElementById("priority").value;
+             count++;
+
+            let row = document.createElement("tr");
+                 
+             let array = taskname;
+             for(let i=0; i<=array2.length; i++){
+                   if(array==array2[i]){
+                    alert("do you want to save again");
+
+
+                    
+                   }
+             }
+             array2.push(array);
+             console.log(array);
+             console.log(array2);
+          
+            row.setAttribute("id", count);
+            let col = document.createElement("td");
+            col.innerText = taskname;
+            let col2 = document.createElement("td");
+            col2.innerText = priority;
+            let btn = document.createElement("td");
+            let specials = document.createElement("button");
+            specials.innerHTML = "delete" ;
+            btn.appendChild(specials);
+
+          
+          
+            row.append(col, col2, btn);
+            console.log(row);
+
+            document.querySelector("tbody").append(row);
+
+
+
+
+          
+            
+            
+          
+            
+            specials.addEventListener('click',()=> {
+
+             console.log("hello to this wrold");
+             row.remove();
+
+
+            })
+           
+
+
+            
+        })
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Book</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Recipe Book</h1>
+    </header>
+    
+    <section id="recipe-form">
+        <h2>Add/Edit Recipe</h2>
+        <form id="add-recipe-form">
+            <input type="hidden" id="recipe-index">
+            
+            <label for="title">Recipe Title:</label>
+            <input type="text" id="title" required>
+            
+            <label for="ingredients">Ingredients:</label>
+            <textarea id="ingredients" required></textarea>
+            
+            <label for="instructions">Instructions:</label>
+            <textarea id="instructions" required></textarea>
+            
+            <label for="cuisine">Cuisine Type:</label>
+            <input type="text" id="cuisine" required>
+            
+            <button type="submit">Save Recipe</button>
+        </form>
+    </section>
+    
+    <section id="search-filter">
+        <h2>Search & Filter</h2>
+        <input type="text" id="search-title" placeholder="Search by title...">
+        <input type="text" id="search-ingredients" placeholder="Search by ingredients...">
+        <select id="filter-cuisine">
+            <option value="">All Cuisines</option>
+        </select>
+        <button onclick="filterRecipes()">Search</button>
+    </section>
+    
+    <section id="recipe-list">
+        <h2>Recipes</h2>
+        <ul id="recipes"></ul>
+    </section>
+
+    <script>
+        let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+
+        document.getElementById("add-recipe-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            saveRecipe();
+        });
+
+        function saveRecipe() {
+            const index = document.getElementById("recipe-index").value;
+            const title = document.getElementById("title").value.trim();
+            const ingredients = document.getElementById("ingredients").value.trim();
+            const instructions = document.getElementById("instructions").value.trim();
+            const cuisine = document.getElementById("cuisine").value.trim();
+
+            if (!title || !ingredients) {
+                alert("Please provide both a recipe title and ingredients.");
+                return;
+            }
+
+            const newRecipe = { title, ingredients, instructions, cuisine };
+
+            if (index) {
+                recipes[parseInt(index)] = newRecipe;
+            } else {
+                recipes.push(newRecipe);
+            }
+            
+            saveRecipes();
+            displayRecipes();
+            populateCuisineFilter();
+            document.getElementById("add-recipe-form").reset();
+            document.getElementById("recipe-index").value = "";
+        }
+
+        function displayRecipes(filteredRecipes = recipes) {
+            const recipeList = document.getElementById("recipes");
+            recipeList.innerHTML = "";
+            filteredRecipes.forEach((recipe, index) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<strong>${recipe.title}</strong> (${recipe.cuisine})<br>
+                                      <em>Ingredients:</em> ${recipe.ingredients}<br>
+                                      <em>Instructions:</em> ${recipe.instructions}<br>
+                                      <button onclick="editRecipe(${index})">Edit</button>
+                                      <button onclick="deleteRecipe(${index})">Delete</button>`;
+                recipeList.appendChild(listItem);
+            });
+        }
+
+        function editRecipe(index) {
+            const recipe = recipes[index];
+            document.getElementById("recipe-index").value = index;
+            document.getElementById("title").value = recipe.title;
+            document.getElementById("ingredients").value = recipe.ingredients;
+            document.getElementById("instructions").value = recipe.instructions;
+            document.getElementById("cuisine").value = recipe.cuisine;
+        }
+
+        function deleteRecipe(index) {
+            if (confirm("Are you sure you want to delete this recipe?")) {
+                recipes.splice(index, 1);
+                saveRecipes();
+                displayRecipes();
+                populateCuisineFilter();
+            }
+        }
+
+        function saveRecipes() {
+            localStorage.setItem("recipes", JSON.stringify(recipes));
+        }
+
+        function filterRecipes() {
+            const titleQuery = document.getElementById("search-title").value.toLowerCase();
+            const ingredientsQuery = document.getElementById("search-ingredients").value.toLowerCase();
+            const selectedCuisine = document.getElementById("filter-cuisine").value;
+            
+            const filtered = recipes.filter(recipe => 
+                (recipe.title.toLowerCase().includes(titleQuery) || titleQuery === "") &&
+                (recipe.ingredients.toLowerCase().includes(ingredientsQuery) || ingredientsQuery === "") &&
+                (recipe.cuisine === selectedCuisine || selectedCuisine === "")
+            );
+            
+            displayRecipes(filtered);
+        }
+
+        function populateCuisineFilter() {
+            const cuisineFilter = document.getElementById("filter-cuisine");
+            const cuisines = [...new Set(recipes.map(recipe => recipe.cuisine))];
+            cuisineFilter.innerHTML = '<option value="">All Cuisines</option>' + cuisines.map(cuisine => `<option value="${cuisine}">${cuisine}</option>`).join('');
+        }
+
+        window.addEventListener("load", () => {
+            displayRecipes();
+            populateCuisineFilter();
+        });
+    </script>
+</body>
+</html>

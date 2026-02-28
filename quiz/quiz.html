@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App with Timer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="quiz-container">
+    <div class="timer">Time Left: <span id="time">10</span>s</div>
+    <h2 id="question">Question</h2>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+    <div class="result" id="result"></div>
+</div>
+<script>
+const quizData = [
+    // this is a sample quiz data, you can modify it as per your needs
+    {
+        question: "Which language is used for web apps?",
+        options: ["Python", "JavaScript", "C++", "Java"],
+        correct: "JavaScript"
+    },
+    {
+        question: "Which tag is used in HTML for JavaScript?",
+        options: ["<script>", "<js>", "<javascript>", "<code>"],
+        correct: "<script>"
+    },
+    {
+        question: "CSS stands for?",
+        options: [
+            "Creative Style Sheets",
+            "Cascading Style Sheets",
+            "Colorful Style Sheets",
+            "Computer Style Sheets"
+        ],
+        correct: "Cascading Style Sheets"
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = 30;
+let timer;
+// Load the first question
+function loadQuestion() {
+    clearInterval(timer);
+    timeLeft = 30;
+    document.getElementById("time").innerText = timeLeft;
+// Get the question and options elements
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+
+    questionEl.innerText = quizData[currentQuestion].question;
+    optionsEl.innerHTML = "";
+// Create option buttons
+    quizData[currentQuestion].options.forEach(option => {
+        const div = document.createElement("div");
+        div.classList.add("option");
+        div.innerText = option;
+        div.onclick = () => selectAnswer(option);
+        optionsEl.appendChild(div);
+    });
+// Start the timer
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time").innerText = timeLeft;
+// If time runs out, move to the next question
+        if (timeLeft === 0) {
+            nextQuestion();
+        }
+    }, 1000); 
+    // decrease time every second
+}
+
+function selectAnswer(selected) {
+    if (selected === quizData[currentQuestion].correct) {
+        score++;
+    }
+    nextQuestion();
+}
+// Move to the next question or show results if it's the last question
+
+function nextQuestion() {
+    clearInterval(timer);
+    currentQuestion++;
+// Check if there are more questions
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+        // load the next question
+    } else {
+        document.querySelector(".quiz-container").innerHTML = `
+            <h2>Quiz Completed 🎉</h2>
+            <p>Your Score: ${score} / ${quizData.length}</p>
+            <button onclick="location.reload()">Restart Quiz</button>
+        `;
+    }
+    // if no more questions, show the final score and a restart button
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
